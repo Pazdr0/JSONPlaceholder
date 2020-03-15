@@ -1,9 +1,27 @@
 plugins {
     kotlin("jvm") version "1.3.61"
+    id("org.openjfx.javafxplugin") version "0.0.8"
 }
 
 group = "org.example"
 version = "1.0-SNAPSHOT"
+
+buildscript {
+    repositories {
+        maven {
+            setUrl("https://plugins.gradle.org/m2/")
+        }
+    }
+    dependencies {
+        classpath("org.openjfx:javafx-plugin:0.0.8")
+    }
+}
+apply(plugin = "org.openjfx.javafxplugin")
+
+javafx {
+    version = "11"
+    modules("javafx.controls")
+}
 
 repositories {
     mavenCentral()
