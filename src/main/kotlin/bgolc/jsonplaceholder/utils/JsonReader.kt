@@ -1,25 +1,22 @@
-package bgolc.jsonplaceholder
+package bgolc.jsonplaceholder.utils
 
+import bgolc.jsonplaceholder.model.DownloadableContent
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import com.google.gson.reflect.TypeToken
 import java.io.FileNotFoundException
 import java.lang.reflect.Type
 import java.net.MalformedURLException
 import java.net.URISyntaxException
 import java.net.URL
 
-class PostsReader {
+class JsonReader {
 
     private val gson = Gson()
 
-    fun readJsonFile(stringUrl: String): List<Post> {
+    fun <T : DownloadableContent> readJsonFile(stringUrl: String, type: Type): List<T> {
         if (!validateUrl(stringUrl)) return emptyList()
-
-        val postType: Type = object : TypeToken<List<Post>>() {}.type
         val downloadedPosts = downloadPosts(stringUrl)
 
-        return gson.fromJson(downloadedPosts, postType)
+        return gson.fromJson(downloadedPosts, type)
     }
 
     private fun validateUrl(stringUrl: String): Boolean {
