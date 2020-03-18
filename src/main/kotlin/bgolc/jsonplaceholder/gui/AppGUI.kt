@@ -1,6 +1,5 @@
-package bgolc.jsonplaceholder
+package bgolc.jsonplaceholder.gui
 
-import bgolc.jsonplaceholder.gui.MainPane
 import javafx.application.Application
 import javafx.scene.Scene
 import javafx.stage.Stage
