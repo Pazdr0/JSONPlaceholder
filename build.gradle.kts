@@ -52,7 +52,7 @@ tasks {
     jar {
         manifest {
             attributes(
-                mapOf("Main-Class" to "bgolc.jsonplaceholder.utils.StartGUI")
+                mapOf("Main-Class" to "bgolc.jsonplaceholder.StartGUI")
             )
         }
     }
