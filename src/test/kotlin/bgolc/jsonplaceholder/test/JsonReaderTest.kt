@@ -15,7 +15,7 @@ import java.net.MalformedURLException
 import java.net.URISyntaxException
 import java.nio.file.Files
 
-class PostReaderTest {
+class JsonReaderTest {
 
     private lateinit var reader: JsonReader
 
