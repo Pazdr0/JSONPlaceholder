@@ -9,7 +9,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 
 
-class JsonWriter {
+internal class JsonWriter {
 
     private val gson = GsonBuilder()
         .setPrettyPrinting()
@@ -19,10 +19,12 @@ class JsonWriter {
         const val EXT = ".json"
     }
 
-    fun <T : DownloadableContent> writeJsons(destination: Path, posts: List<T>) {
+    fun <T : DownloadableContent> writeJsons(destination: Path, items: List<T>) {
+        if (items.isEmpty()) throw IllegalStateException("Lista obektów do zapisania jest pusta")
         checkDestination(destination)
+
         val type = object : TypeToken<T>() {}.type
-        posts.forEach { post ->
+        items.forEach { post ->
             FileWriter("$destination/${post.id}$EXT").use {
                 gson.toJson(post, type, it)
             }
@@ -30,9 +32,7 @@ class JsonWriter {
     }
 
     private fun checkDestination(destination: Path) {
-        if (!Files.exists(destination)) {
-            Files.createDirectory(destination)
-        } else if (!Files.isDirectory(destination)) {
+        if (!Files.exists(destination) || !Files.isDirectory(destination)) {
             throw FileNotFoundException("Wprowadzono błędną lokalizację")
         }
     }

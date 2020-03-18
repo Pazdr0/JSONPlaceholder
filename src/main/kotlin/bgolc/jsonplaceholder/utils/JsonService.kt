@@ -1,6 +1,10 @@
 package bgolc.jsonplaceholder.utils
 
 import bgolc.jsonplaceholder.model.DownloadableContent
+import javafx.application.Platform
+import javafx.scene.control.Alert
+import java.io.File
+import java.io.FileNotFoundException
 import java.lang.reflect.Type
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -13,16 +17,34 @@ class JsonService : Reader, Writer {
     private lateinit var destination: Path
 
     override fun readFile(stringUrl: String, type: Type) {
-        jsonList = reader.readJsonFile(stringUrl, type)
+        try {
+            jsonList = reader.readJsonFromUrl(stringUrl, type)
+        } catch (ex: Exception) {
+            Platform.runLater {
+                Alert(Alert.AlertType.ERROR, "Wprowadzono nieporawny adres url").showAndWait()
+            }
+        }
     }
 
-    override fun getDestiantion(path: String) {
-        destination = Paths.get(path)
+    override fun setDestiantion(file: File?) {
+        if (file != null) {
+            destination = Paths.get(file.absolutePath)
+        } else {
+            Platform.runLater {
+                Alert(Alert.AlertType.ERROR, "Wprowadzono nieprawidłową ścieżkę").showAndWait()
+            }
+        }
     }
 
     override fun saveFiles() {
-        if (this::jsonList.isInitialized && this::destination.isInitialized) {
+        try {
             writer.writeJsons(destination, jsonList)
+        } catch (ex: UninitializedPropertyAccessException) {
+            Alert(Alert.AlertType.ERROR, "Nie pobrano danych lub nie wybrano ścieżki do zapisu").showAndWait()
+        } catch (ex: FileNotFoundException) {
+            Alert(Alert.AlertType.ERROR, ex.message).showAndWait()
+        } catch (ex: IllegalStateException) {
+            Alert(Alert.AlertType.ERROR, ex.message).showAndWait()
         }
     }
 }
@@ -32,6 +54,6 @@ interface Reader {
 }
 
 interface Writer {
-    fun getDestiantion(path: String)
+    fun setDestiantion(file: File?)
     fun saveFiles()
 }

@@ -16,8 +16,9 @@ class ActionButtonsBar(writer: Writer) : HBox() {
         .apply {
             maxWidth = buttonWidth
             onAction = EventHandler {
-                val chooser = DirectoryChooser().showDialog(scene.window)
-                writer.getDestiantion(chooser.absolutePath)
+                val chooser = DirectoryChooser()
+                val directory = chooser.showDialog(scene.window)
+                writer.setDestiantion(directory)
             }
         }
     private val saveJsonsButton = Button("Zapisz pliki")

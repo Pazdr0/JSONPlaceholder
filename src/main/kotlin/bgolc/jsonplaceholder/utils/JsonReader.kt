@@ -2,41 +2,28 @@ package bgolc.jsonplaceholder.utils
 
 import bgolc.jsonplaceholder.model.DownloadableContent
 import com.google.gson.Gson
-import java.io.FileNotFoundException
 import java.lang.reflect.Type
-import java.net.MalformedURLException
-import java.net.URISyntaxException
 import java.net.URL
 
-class JsonReader {
+internal class JsonReader {
 
     private val gson = Gson()
 
-    fun <T : DownloadableContent> readJsonFile(stringUrl: String, type: Type): List<T> {
-        if (!validateUrl(stringUrl)) return emptyList()
-        val downloadedPosts = downloadPosts(stringUrl)
-
-        return gson.fromJson(downloadedPosts, type)
+    fun <T : DownloadableContent> readJsonFromUrl(stringUrl: String, listType: Type): List<T> {
+        val jsonString = downloadContent(stringUrl)
+        return gson.fromJson(jsonString, listType)
     }
 
-    private fun validateUrl(stringUrl: String): Boolean {
-        return try {
-            URL(stringUrl).toURI()
-            true
-        } catch (ex: MalformedURLException) {
-            println("Nie poprawny adres URL: ${ex.message}")
-            false
-        } catch (ex: URISyntaxException) {
-            println("Nie poprawny adres URL: ${ex.message}")
-            false
-        }
+    fun <T : DownloadableContent> readJsonString(jsonString: String, listType: Type): List<T> {
+        return gson.fromJson(jsonString, listType)
     }
 
-    private fun downloadPosts(stringUrl: String): String {
-        return try {
-            URL(stringUrl).readText()
-        } catch (ex: FileNotFoundException) {
-            throw FileNotFoundException("Nie znaleziono pliku: ${ex.message}")
-        }
+    fun downloadContent(stringUrl: String): String {
+        validateUrl(stringUrl)
+        return URL(stringUrl).readText()
+    }
+
+    private fun validateUrl(stringUrl: String) {
+        URL(stringUrl).toURI()
     }
 }
