@@ -1,6 +1,6 @@
 package bgolc.jsonplaceholder.model
 
-class Post(
+data class Post(
     val userId: Int,
     override val id: Int,
     val title: String,
